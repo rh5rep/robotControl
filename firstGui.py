@@ -25,12 +25,10 @@ class MainWindow(QMainWindow):
         self.move_amount_spinbox.setMaximum(10000)
         layout.addWidget(self.move_amount_spinbox)
         # Create a slider for choosing the movement speed
-        self.speed_slider = QSlider(Qt.Horizontal)
-        self.speed_slider.setMinimum(1)
-        self.speed_slider.setMaximum(500)
-        self.speed_slider.setValue(50)
-        self.speed_slider.setTickPosition(QSlider.TicksBelow)
-        self.speed_slider.setTickInterval(100)
+        self.speed_spinbox = QSpinBox()
+        self.speed_spinbox.setMinimum(1)
+        self.speed_spinbox.setMaximum(500)
+        self.speed_spinbox.setValue(50)
         layout.addWidget(QLabel("Speed:"))
         layout.addWidget(self.speed_slider)
         # Create push buttons for each G-code move command
@@ -110,13 +108,13 @@ class MainWindow(QMainWindow):
 
     def send_gcode_left(self):
         move_amount = self.move_amount_spinbox.value()
-        speed = self.speed_slider.value()
+        speed = self.speed_spinbox.value()
         gcode_command = f"{self.movement_type} \nG1 X-{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def send_gcode_right(self):
         move_amount = self.move_amount_spinbox.value()
-        speed = self.speed_slider.value()
+        speed = self.speed_spinbox.value()
         gcode_command = f"{self.movement_type} \nG1 X{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
