@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        super().__nit__()
+        super().__init__()
         self.setWindowTitle("G-code Move Commands")
         self.setGeometry(100, 100, 300, 300)
 
@@ -61,6 +61,7 @@ class MainWindow(QMainWindow):
 
         # Create an input text field for manual G-code entry
         self.gcode_input = QLineEdit()
+        self.gcode_input.returnPressed.connect(self.send_custom_gcode)
         layout.addWidget(self.gcode_input)
 
         # Create a text box to display the sent/received G-code commands
@@ -74,7 +75,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         # Serial connection settings
-        self.serial_port = "/dev/ttygUSB0"  # Replace with the appropriate port
+        self.serial_port = "/dev/ttyUSB0"  # Replace with the appropriate port
         self.baud_rate = 115200  # Replace with the appropriate baud rate
 
         # Open the serial connection
@@ -111,25 +112,25 @@ class MainWindow(QMainWindow):
     def send_gcode_up(self):
         move_amount = self.move_amount_spinbox.value()
         speed = self.speed_slider.value()
-        gcode_command = f"{self.movement_type} G1 Y{move_amount} F{speed}\n"
+        gcode_command = f"{self.movement_type} \r\nG1 Y{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def send_gcode_down(self):
         move_amount = self.move_amount_spinbox.value()
         speed = self.speed_slider.value()
-        gcode_command = f"{self.movement_type} G1 Y-{move_amount} F{speed}\n"
+        gcode_command = f"{self.movement_type} \r\nG1 Y-{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def send_gcode_left(self):
         move_amount = self.move_amount_spinbox.value()
         speed = self.speed_slider.value()
-        gcode_command = f"{self.movement_type} G1 X-{move_amount} F{speed}\n"
+        gcode_command = f"{self.movement_type} \r\nG1 X-{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def send_gcode_right(self):
         move_amount = self.move_amount_spinbox.value()
         speed = self.speed_slider.value()
-        gcode_command = f"{self.movement_type} G1 X{move_amount} F{speed}\n"
+        gcode_command = f"{self.movement_type} \r\nG1 X{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def stop_gcode(self):
