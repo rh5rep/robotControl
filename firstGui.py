@@ -1,8 +1,9 @@
 import serial
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QRadioButton, QLabel, \
     QSpinBox, QTextEdit, QSlider, QLineEdit
-from PyQt5.QtCore import Qt
-
+from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtCore import Qt, QTimer
+from picamera import PiCamera
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -56,10 +57,14 @@ class MainWindow(QMainWindow):
         self.gcode_display = QTextEdit()
         self.gcode_display.setReadOnly(True)
         layout.addWidget(self.gcode_display)
+        # Create image label
+        self.image_label = QLabel()
+        layout.addWidget(self.image_label)
         # Create a central widget and set the layout
         central_widget = QWidget()
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
+
 
         # Serial connection settings
         self.serial_port = "/dev/ttyUSB0"  # Replace with the appropriate port
@@ -69,6 +74,16 @@ class MainWindow(QMainWindow):
         self.serial = serial.Serial(self.serial_port, self.baud_rate)
         # Movement type (incremental or absolute)
         self.movement_type = "G91"  # G91: Incremental movement
+
+        # Camera Stuff
+
+        self.camera = PiCamera()
+        self.camera.resolution = (640, 480)  # Set the desired resolution
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(update_camera_feed)
+        self.timer.start(100)
+
 
     def read_serial_response(self):
         while self.serial.in_waiting:
@@ -128,6 +143,22 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event):
         self.gcode_display.resize(event.size())
+
+    def update_camera_feed(self):
+
+        # Capture camera image
+        camera.capture("temp.jpg")
+
+        # Load captured imaged
+        image = QImage("temp.jpg")
+
+        # Convert the image to QPixmap to display in a QLabel or other widget
+        pixmap = QPixmap.fromImage(image)
+
+        # Update the QLabel or other widget with the new pixmap
+        # For example, if you have a QLabel called "image_label":
+        self.image_label.setPixmap(pixmap)
+
 
 
 if __name__ == "__main__":
