@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
         # Serial connection settings
-        self.serial_port = "COM1"  # Replace with the appropriate port
+        self.serial_port = "/dev/ttygUSB0"  # Replace with the appropriate port
         self.baud_rate = 115200  # Replace with the appropriate baud rate
 
         # Open the serial connection
@@ -82,6 +82,12 @@ class MainWindow(QMainWindow):
 
         # Movement type (incremental or absolute)
         self.movement_type = "G91"  # G91: Incremental movement
+
+    def read_serial_response(self):
+        while self.serial.in_waitiing:
+            response = self.serial.readline().decode.strip()
+            # Process the response as needed
+            print(f"Received response: {response}")
 
     def set_movement_type(self):
         if self.incremental_radio.isChecked():
@@ -98,6 +104,9 @@ class MainWindow(QMainWindow):
 
         # Send the G-code command over the serial connection
         self.serial.write(gcode_command.encode())
+
+        # Read and process the serial response
+        self.read_serial_response()
 
     def send_gcode_up(self):
         move_amount = self.move_amount_spinbox.value()
@@ -133,6 +142,7 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event):
         self.gcode_display.resize(event.size())
+
 
 if __name__ == "__main__":
     app = QApplication([])
