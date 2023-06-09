@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         self.speed_spinbox.setMaximum(500)
         self.speed_spinbox.setValue(50)
         layout.addWidget(QLabel("Speed:"))
-        layout.addWidget(self.speed_slider)
+        layout.addWidget(self.speed_spinbox)
         # Create push buttons for each G-code move command
         move_up_button = QPushButton("Move Up")
         move_up_button.clicked.connect(self.send_gcode_up)
@@ -111,13 +111,13 @@ class MainWindow(QMainWindow):
 
     def send_gcode_up(self):
         move_amount = self.move_amount_spinbox.value()
-        speed = self.speed_slider.value()
+        speed = self.speed_spinbox.value()
         gcode_command = f"{self.movement_type} \nG1 Y{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def send_gcode_down(self):
         move_amount = self.move_amount_spinbox.value()
-        speed = self.speed_slider.value()
+        speed = self.speed_spinbox.value()
         gcode_command = f"{self.movement_type} \nG1 Y-{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
