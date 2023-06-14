@@ -60,6 +60,19 @@ class MainWindow(QMainWindow):
         # Create image label
         self.image_label = QLabel()
         layout.addWidget(self.image_label)
+
+        # Camera Stuff
+
+        self.camera = PiCamera()
+        self.camera.resolution = (640, 480)  # Set the desired resolution
+        self.timer = QTimer()
+
+        self.camera_running = False # Flag for camera state
+        self.camera_toggle_button = QPushButton("Toggle Camera")
+        self.camera_toggle_button.clicked.connect(self.toggle_camere)
+        layout.addWidget(self.camera_toggle_button)
+
+
         # Create a central widget and set the layout
         central_widget = QWidget()
         central_widget.setLayout(layout)
@@ -75,14 +88,7 @@ class MainWindow(QMainWindow):
         # Movement type (incremental or absolute)
         self.movement_type = "G91"  # G91: Incremental movement
 
-        # Camera Stuff
 
-        self.camera = PiCamera()
-        self.camera.resolution = (640, 480)  # Set the desired resolution
-
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.update_camera_feed)
-        self.timer.start(100)
 
 
     def read_serial_response(self):
@@ -145,20 +151,33 @@ class MainWindow(QMainWindow):
     def resizeEvent(self, event):
         self.gcode_display.resize(event.size())
 
+    def toggle_camera(self):
+        if self.camera_running:
+            # Cam is running --> stop it:
+            self.timer.stop()
+            self.camera_running = False
+            self.camera_toggle_button.setText("Start Camera")
+        else:
+            self.timer.start(100)
+            self.camera_running = True
+            self.camera_toggle_button.setText("Stop Camera")
+
+
+
     def update_camera_feed(self):
+        if self.camera_running:
+            # Capture camera image
+            self.camera.capture("temp.jpg")
 
-        # Capture camera image
-        self.camera.capture("temp.jpg")
+            # Load captured imaged
+            image = QImage("temp.jpg")
 
-        # Load captured imaged
-        image = QImage("temp.jpg")
+            # Convert the image to QPixmap to display in a QLabel or other widget
+            pixmap = QPixmap.fromImage(image)
 
-        # Convert the image to QPixmap to display in a QLabel or other widget
-        pixmap = QPixmap.fromImage(image)
-
-        # Update the QLabel or other widget with the new pixmap
-        # For example, if you have a QLabel called "image_label":
-        self.image_label.setPixmap(pixmap)
+            # Update the QLabel or other widget with the new pixmap
+            # For example, if you have a QLabel called "image_label":
+            self.image_label.setPixmap(pixmap)
 
     def closeEvent(self, event):
         # Release camera and stop the timer
