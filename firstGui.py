@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
         self.camera.resolution = (640, 480)  # Set the desired resolution
 
         self.timer = QTimer()
-        self.timer.timeout.connect(update_camera_feed)
+        self.timer.timeout.connect(self.update_camera_feed)
         self.timer.start(100)
 
 
@@ -106,8 +106,9 @@ class MainWindow(QMainWindow):
         # Send the G-code command over the serial connection
         self.serial.write(gcode_command.encode())
 
-        # Read and process the serial response
-        self.read_serial_response()
+        if self.serial:
+            # Read and process the serial response
+            self.read_serial_response()
 
     def send_gcode_up(self):
         move_amount = self.move_amount_spinbox.value()
@@ -147,7 +148,7 @@ class MainWindow(QMainWindow):
     def update_camera_feed(self):
 
         # Capture camera image
-        camera.capture("temp.jpg")
+        self.camera.capture("temp.jpg")
 
         # Load captured imaged
         image = QImage("temp.jpg")
@@ -158,6 +159,12 @@ class MainWindow(QMainWindow):
         # Update the QLabel or other widget with the new pixmap
         # For example, if you have a QLabel called "image_label":
         self.image_label.setPixmap(pixmap)
+
+    def closeEvent(self, event):
+        # Release camera and stop the timer
+        self.camera.close()
+        self.timer.stop()
+        super().closeEvent(event)
 
 
 
