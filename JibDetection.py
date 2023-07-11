@@ -1,43 +1,49 @@
 import cv2
 import numpy as np
 
-def detect_smpm_connector(image):
-    # Convert image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+cap = cv2.VideoCapture(0)
+
+while True:
+    # Read frame from the webcam
+    ret, frame = cap.read()
+
+    # Convert frame to grayscale for circle detection
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Apply Gaussian blur to reduce noise
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
-    # Perform circle detection using HoughCircles
-    circles = cv2.HoughCircles(blurred, cv2.HOUGH_GRADIENT, 1, 100, param1=50, param2=30, minRadius=10, maxRadius=100)
+    # Apply Hough Circle Transform
+    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 20,
+                               param1=50, param2=30, minRadius=5, maxRadius=20)
 
+    # Check if circles are detected
     if circles is not None:
-        # Convert the circle parameters to integers
-        circles = np.round(circles[0, :]).astype(int)
+        circles = np.round(circles[0, :]).astype("int")
 
-        for (x, y, r) in circles:
-            # Draw the outer aluminum circle
-            cv2.circle(image, (x, y), r, (0, 255, 0), 2)
+        # Create a copy of the frame to draw the circles on
+        overlay = frame.copy()
 
-            # Draw the inner amber circle
-            amber_radius = int(r * 0.8)  # Adjust the scaling factor as needed
-            cv2.circle(image, (x, y), amber_radius, (0, 0, 255), 2)
+        # Overlay similar circles on the frame
+        for i in range(len(circles)):
+            (x1, y1, r1) = circles[i]
+            for j in range(len(circles)):
+                if i == j:
+                    continue  # Skip comparing the circle with itself
+                (x2, y2, r2) = circles[j]
+                distance = ((x2 - x1) ** 2 + (y2 - y1) ** 2)^(.5)
+                if distance <= 100:  # Adjust the threshold as needed
+                    cv2.circle(overlay, (x2, y2), r2, (0, 255, 0), 4)  # Green circle with thickness 4
 
-            # Draw the central pin
-            pin_radius = int(r * 0.2)  # Adjust the scaling factor as needed
-            cv2.circle(image, (x, y), pin_radius, (255, 0, 0), 2)
+        # Add the overlay with similar circles to the original frame
+        frame = cv2.addWeighted(frame, 1, overlay, 0.5, 0)
 
-        return True, image
-    else:
-        return False, image
+    # Display the frame in the GUI window
+    cv2.imshow("Concentric Circle Detection", frame)
 
-# Load the image
-image = cv2.imread('C:\\Users\\hannar1\\OneDrive\\Wentworth Institute of Technology\\Capstone\\2023\\Media\\oneJib.JPG')  # Replace 'your_image.jpg' with the path to your image
+    # Break the loop if the 'q' key is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-# Detect SMPM connector
-success, result_image = detect_smpm_connector(image)
-
-# Display the result
-cv2.imshow('SMPM Connector Detection', result_image)
-cv2.waitKey(0)
+cap.release()
 cv2.destroyAllWindows()
