@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2913cdc-2c69-46e4-bcf4-16d3ceadd867" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/GUIredesign.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JibDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/JibDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIredesign.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUIredesign.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,12 +33,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/hannar1/Desktop/Programming/robotControl"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/hannar1/Desktop/Programming/robotControl&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.GUIredesign">
     <configuration name="GUIredesign" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="robotControl" />

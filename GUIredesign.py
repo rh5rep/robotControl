@@ -1,7 +1,10 @@
 import sys
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QGridLayout, \
-    QPushButton, QLineEdit, QTextEdit, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QRadioButton
+from functools import partial
+
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QGridLayout, \
+    QPushButton, QLineEdit, QTextEdit, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QRadioButton, QFormLayout, \
+    QSpinBox
 
 
 class MainWindow(QMainWindow):
@@ -87,11 +90,20 @@ class MainWindow(QMainWindow):
         # - horizontal- add label, drop, drop, drop
         # - button
         # - horizontal - add label, radio cam 1, cam 2, off
-        jib_array = ['Jib position', '1', '2', '3', '4']
-        tool_array = ['Tool', 'Power', 'Cable', 'None']
-        plug_array = ['Plug position']
+
+        # TODO make a dialog box to ask how many jibs and tools there are
+
+        jib_range = [1, 4]
+        jib_array = ['1', '2', '3', '4']
+        tool_array = ['Power', 'Cable', 'None']
+        plug_array = []
         for num in range(1, 19):
             plug_array.append(str(num))
+
+        jib_spinbox = QSpinBox()
+        jib_spinbox.setRange(jib_range[0], jib_range[1])
+        plug_spinbox = QSpinBox()
+        plug_spinbox.setRange(1, 18)
 
         tab2_V_layout = QVBoxLayout(tab2)
         tab2_H1_layout = QHBoxLayout(tab2)
@@ -141,15 +153,101 @@ class MainWindow(QMainWindow):
 
         tab2_V_layout.addLayout(tab2_H3_layout)
 
-        # Tab 3
-        tab3_layout = QVBoxLayout(tab3)
         tab2_H2_layout = QHBoxLayout(tab2)
         tab2_H2_layout.addWidget(QLabel("View"))
+
+        # Tab 3
+        tab3_V_layout = QVBoxLayout(tab3)
+
+        choose_form = QFormLayout()
+
+        choose_form.addRow('Tool:', tool_combo)
+        choose_form.addRow('Jib Number: ', jib_spinbox)
+        choose_form.addRow('Plug Number: ', plug_spinbox)
+
+        self.task_form = QFormLayout()
+        form_H_box = QHBoxLayout()
+
+        self.insert_spinbox = QSpinBox()
+        self.insert_spinbox.setRange(1, self.task_form.rowCount())
+        choose_form.addRow('Insert as Task #: ', self.insert_spinbox)
+
+        # self.task_form.setReadOnly(True)
+        # self.task_form.setPlaceholderText("Task List Shown Here")
+
+        add_button = QPushButton('Add')
+        save_button = QPushButton('Save')
+        load_button = QPushButton('Load')
+
+        add_button.clicked.connect(
+            lambda: self.add_row(tool_combo.currentText(), jib_spinbox.value(), plug_spinbox.value()))
+        save_button.clicked.connect(lambda: self.save_tasks('test.txt'))
+
+        form_H_box.addWidget(save_button)
+        form_H_box.addWidget(load_button)
+
+        tab3_V_layout.addLayout(self.task_form)
+        tab3_V_layout.addLayout(form_H_box)
+        tab3_V_layout.addLayout(choose_form)
+        tab3_V_layout.addWidget(add_button)
+        tab3_V_layout.addWidget(QPushButton('Run'))
+
+    def add_row(self, tool, jib, plug):
+        tool_button = QPushButton(f"Tool: {tool}")
+        jib_button = QPushButton(f"Jib: {jib}")
+        plug_button = QPushButton(f"Plug: {plug}")
+
+        row_addition = QHBoxLayout()
+        row_addition.addWidget(tool_button)
+        row_addition.addWidget(jib_button)
+        row_addition.addWidget(plug_button)
+
+        remove_button = QPushButton("Remove")
+        remove_button.clicked.connect(partial(self.remove_row, row_addition))
+
+        row_addition.addWidget(remove_button)
+        self.task_form.insertRow(self.insert_spinbox.value() - 1, f"Task #{self.insert_spinbox.value() + 1}",
+                                 row_addition)
+        # self.task_form.insertRow(self.insert_spinbox.value(), row_addition)
+        self.insert_spinbox.setRange(0, self.task_form.rowCount() + 2)
+        self.update_form()
+
+    def remove_row(self, row_layout):
+        # Find the corresponding row layout in the form layout
+        self.task_form.removeRow(row_layout)
+        self.update_form()
+
+    def update_form(self):
+        for row in range(self.task_form.rowCount()):
+            label_item = self.task_form.itemAt(row, QFormLayout.LabelRole)
+            print(f'label item {label_item}')
+            if label_item is not None and isinstance(label_item.widget(), QLabel):
+                label_widget = label_item.widget()
+                print(f'label widget {label_widget}')
+                label_widget.setText(f"Task #{row + 1}:")
+                self.insert_spinbox.setRange(1, self.task_form.rowCount() + 1)
+                self.insert_spinbox.setValue(row + 2)
+
+    def save_tasks(self, file_path):
+        # with open(file_path, 'w') as file:
+        #     for row in range(self.task_form.rowCount()):
+        #         # label = self.task_form.itemAt(row, QFormLayout.LabelRole)
+        #         field = self.task_form.itemAt(row, QFormLayout.FieldRole)
+        #         label = self.task_form.itemAt(row).widget()
+        #
+        #         # field = self.task_form.itemAt(row, self.task_form.widget().text())
+        #
+        #         file.write(f"{label}: {field}\n")
+
+    def load_tasks(self, file_path):
+        with open(file_path, 'w') as file:
+            for row in range():
+                pass
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setStyle('Fusion')
+    app.setStyle('fusion')
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
