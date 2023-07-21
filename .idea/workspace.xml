@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2913cdc-2c69-46e4-bcf4-16d3ceadd867" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/data_and_cams.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/load_sensor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUIredesign.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUIredesign.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +41,7 @@
     &quot;last_opened_file_path&quot;: &quot;C:/Users/hannar1/Desktop/Programming/robotControl&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.GUIredesign">
+  <component name="RunManager" selected="Python.main">
     <configuration name="GUIredesign" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="robotControl" />
       <option name="INTERPRETER_OPTIONS" value="" />

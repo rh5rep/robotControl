@@ -8,6 +8,8 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, Q
     QPushButton, QLineEdit, QTextEdit, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QRadioButton, QFormLayout, \
     QSpinBox
 
+from data_and_cams import DataAndCamsTab
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -19,6 +21,8 @@ class MainWindow(QMainWindow):
         self.row_data = []
         self.setWindowTitle("Robot Control")
         self.setGeometry(100, 100, 500, 400)
+
+        self.load_sensor_data_label = QLabel()
 
         # Create a central widget and set the layout
         central_widget = QWidget()
@@ -33,11 +37,13 @@ class MainWindow(QMainWindow):
         tab1 = QWidget()
         tab2 = QWidget()
         tab3 = QWidget()
+        tab4 = DataAndCamsTab()
 
         # Add tabs to the tab widget
         tab_widget.addTab(tab1, "Manual Control")
         # tab_widget.addTab(tab2, "Semi-Auto Control")
         tab_widget.addTab(tab3, "Tool Change")
+        tab_widget.addTab(tab4, "Data and Cams")
 
         # Customize the tab content
         tab1_layout = QVBoxLayout(tab1)
@@ -102,7 +108,7 @@ class MainWindow(QMainWindow):
 
         jib_range = [1, 4]
         jib_array = ['1', '2', '3', '4']
-        tool_array = ['Power', 'Cable', 'None']
+        tool_array = ['Power Sensor', 'Spectrum Analyzer', 'Cal Standard', 'Inspection', 'None']
         plug_array = []
         for num in range(1, 19):
             plug_array.append(str(num))
@@ -169,8 +175,8 @@ class MainWindow(QMainWindow):
         choose_form = QFormLayout()
 
         choose_form.addRow('Tool:', tool_combo)
-        choose_form.addRow('Jib Number: ', jib_spinbox)
-        choose_form.addRow('Plug Number: ', plug_spinbox)
+        choose_form.addRow('Jib #: ', jib_spinbox)
+        choose_form.addRow('Position #: ', plug_spinbox)
 
         self.task_form = QFormLayout()
         form_H_box = QHBoxLayout()
@@ -264,6 +270,11 @@ class MainWindow(QMainWindow):
             jib = sublist[1]
             plug = sublist[2]
             self.add_row(tool, jib, plug)
+
+    def update_load_sensor_data(self, data):
+        # Update the GUI with the data from the HX711 sensor
+        # For example, update a QLabel or QTextEdit with the sensor data
+        self.load_sensor_data_label.setText(f"Load Sensor Data: {data}")
 
 
 if __name__ == "__main__":
