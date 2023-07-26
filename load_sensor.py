@@ -61,7 +61,7 @@
 # finally:
 #     GPIO.cleanup()
 
-from PySide6.QtCore import QThread, Signal
+from PyQt5.QtCore import QThread, pyqtSignal as Signal
 import random
 import time
 
