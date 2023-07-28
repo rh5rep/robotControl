@@ -9,8 +9,6 @@ class Movement(QObject):
         super().__init__()
 
         self.movement_type = "G91"
-        self.speed = 1
-        self.amount = 50
 
         # Create a Read-Only text field for Echoing G-code
         self.gcode_display = QTextEdit()

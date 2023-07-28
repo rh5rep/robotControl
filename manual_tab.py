@@ -96,19 +96,31 @@ class ManualTab(QWidget):
 
         # Movement
 
-        button_y_plus.clicked.connect(
-            partial(self.movement.send_gcode_forward, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        button_y_minus.clicked.connect(
-            partial(self.movement.send_gcode_back, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        button_x_plus.clicked.connect(
-            partial(self.movement.send_gcode_right, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        button_x_minus.clicked.connect(
-            partial(self.movement.send_gcode_left, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        button_z_plus.clicked.connect(
-            partial(self.movement.send_gcode_up, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        button_z_minus.clicked.connect(
-            partial(self.movement.send_gcode_down, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        # button_y_plus.clicked.connect(
+        #     partial(self.movement.send_gcode_forward, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        # button_y_minus.clicked.connect(
+        #     partial(self.movement.send_gcode_back, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        # button_x_plus.clicked.connect(
+        #     partial(self.movement.send_gcode_right, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        # button_x_minus.clicked.connect(
+        #     partial(self.movement.send_gcode_left, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        # button_z_plus.clicked.connect(
+        #     partial(self.movement.send_gcode_up, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        # button_z_minus.clicked.connect(
+        #     partial(self.movement.send_gcode_down, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
         # button_home = QPushButton("Home")
 
+        button_y_plus.clicked.connect(
+            lambda: self.movement.send_gcode_forward(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        button_y_minus.clicked.connect(
+            lambda: self.movement.send_gcode_back(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        button_x_plus.clicked.connect(
+            lambda: self.movement.send_gcode_right(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        button_x_minus.clicked.connect(
+            lambda: self.movement.send_gcode_left(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        button_z_plus.clicked.connect(
+            lambda: self.movement.send_gcode_up(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        button_z_minus.clicked.connect(
+            lambda: self.movement.send_gcode_down(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
     def update_gcode_display(self, gcode_command):
         self.gcode_display.append(gcode_command)
