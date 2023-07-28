@@ -1,0 +1,1 @@
+[['Power Sensor', 1, 1, 1], ['Power Sensor', 1, 1, 3], ['Power Sensor', 1, 1, 4], ['Power Sensor', 1, 1, 5]]
