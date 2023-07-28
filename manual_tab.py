@@ -110,10 +110,12 @@ class ManualTab(QWidget):
             lambda: self.movement.send_gcode_up(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
         button_z_minus.clicked.connect(
             lambda: self.movement.send_gcode_down(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+
+        button_home.clicked.connect(self.movement.homing_command)
         # button_home = QPushButton("Home")
 
     def update_gcode_display(self, gcode_command):
         self.gcode_display.append(gcode_command)
         self.gcode_input.clear()
 
-    
+
