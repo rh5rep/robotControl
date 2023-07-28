@@ -82,7 +82,7 @@ class ManualTab(QWidget):
         self.gcode_input = QLineEdit()
         self.gcode_input.setPlaceholderText("Send Manual G-Code")
         self.gcode_input.returnPressed.connect(
-            lambda: self.movement.send_custom_gcode(), self.gcode_input.text())
+            lambda: self.movement.send_custom_gcode(self.gcode_input.text()))
         self.gcode_input.clear()
 
         # Create a Read-Only text field for Echoing G-code
@@ -97,8 +97,6 @@ class ManualTab(QWidget):
         self.setLayout(tab1_layout)
 
         # Movement
-
-
 
         button_y_plus.clicked.connect(
             lambda: self.movement.send_gcode_forward(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
@@ -116,3 +114,4 @@ class ManualTab(QWidget):
 
     def update_gcode_display(self, gcode_command):
         self.gcode_display.append(gcode_command)
+        self.gcode_input.clear()

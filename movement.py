@@ -74,7 +74,10 @@ class Movement(QObject):
     def send_custom_gcode(self, gcode):
         gcode_command = gcode + "\n"
         self.send_gcode(gcode_command)
-        self.gcode_input.clear()
+
+    def homing_command(self):
+        gcode_command = f"G28 X Y"
+        self.send_gcode(gcode_command)
 
     def read_serial_response(self):
         while self.serial.in_waiting:
@@ -82,4 +85,5 @@ class Movement(QObject):
             # Process the response as needed
             print(f"Received response: {response}")
             self.gcode_display.append(response)
+            self.get_gcode_display()
 
