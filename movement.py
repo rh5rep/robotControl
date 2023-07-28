@@ -73,8 +73,8 @@ class Movement(QObject):
         gcode_command = f"{self.movement_type} \nG1 Y-{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
-    def send_custom_gcode(self):
-        gcode_command = self.gcode_input.text() + "\n"
+    def send_custom_gcode(self, gcode):
+        gcode_command = gcode + "\n"
         self.send_gcode(gcode_command)
         self.gcode_input.clear()
 
