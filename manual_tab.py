@@ -81,6 +81,7 @@ class ManualTab(QWidget):
         # Create an input text field for manual G-code entry
         self.gcode_input = QLineEdit()
         self.gcode_input.setPlaceholderText("Send Manual G-Code")
+        self.gcode_input.returnPressed.connect(self.send_custom_gcode)
 
         # Create a Read-Only text field for Echoing G-code
         self.gcode_display = QTextEdit()
