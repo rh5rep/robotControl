@@ -77,3 +77,11 @@ class Movement(QObject):
         gcode_command = self.gcode_input.text() + "\n"
         self.send_gcode(gcode_command)
         self.gcode_input.clear()
+
+    def read_serial_response(self):
+        while self.serial.in_waiting:
+            response = self.serial.readline().decode("utf-8").strip()
+            # Process the response as needed
+            print(f"Received response: {response}")
+            self.gcode_display.append(response)
+
