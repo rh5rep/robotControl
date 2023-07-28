@@ -2,9 +2,9 @@ import ast
 import sys
 from functools import partial
 
-from PySide6 import QtGui, QtWidgets
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QGridLayout, \
+from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QGridLayout, \
     QPushButton, QLineEdit, QTextEdit, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QRadioButton, QFormLayout, \
     QSpinBox
 
