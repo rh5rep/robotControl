@@ -64,11 +64,11 @@ class Movement(QObject):
         self.send_gcode(gcode_command)
 
     def send_gcode_forward(self, move_amount, speed):
-        gcode_command = f"{self.movement_type} \nG1 Y{move_amount} F{speed}\n"
+        gcode_command = f"{self.movement_type} \nG1 Y{move_amount} E{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def send_gcode_back(self, move_amount, speed):
-        gcode_command = f"{self.movement_type} \nG1 Y-{move_amount} F{speed}\n"
+        gcode_command = f"{self.movement_type} \nG1 Y-{move_amount} E{move_amount} F{speed}\n"
         self.send_gcode(gcode_command)
 
     def send_custom_gcode(self, gcode):
@@ -76,7 +76,8 @@ class Movement(QObject):
         self.send_gcode(gcode_command)
 
     def homing_command(self):
-        gcode_command = f"G28 X Y"
+        # gcode_command = "G28 X Y"
+        gcode_command = "M302 S0\nM92 X1600 Y1600 Z1600 E1600\n"
         self.send_gcode(gcode_command)
 
     def read_serial_response(self):
