@@ -115,3 +115,5 @@ class ManualTab(QWidget):
     def update_gcode_display(self, gcode_command):
         self.gcode_display.append(gcode_command)
         self.gcode_input.clear()
+
+    
