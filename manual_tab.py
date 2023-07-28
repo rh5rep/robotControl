@@ -81,7 +81,9 @@ class ManualTab(QWidget):
         # Create an input text field for manual G-code entry
         self.gcode_input = QLineEdit()
         self.gcode_input.setPlaceholderText("Send Manual G-Code")
-        self.gcode_input.returnPressed.connect(partial(self.movement.send_custom_gcode, self.gcode_input.text()))
+        self.gcode_input.returnPressed.connect(
+            lambda: self.movement.send_custom_gcode(), self.gcode_input.text())
+        self.gcode_input.clear()
 
         # Create a Read-Only text field for Echoing G-code
         self.gcode_display = QTextEdit()
@@ -96,19 +98,7 @@ class ManualTab(QWidget):
 
         # Movement
 
-        # button_y_plus.clicked.connect(
-        #     partial(self.movement.send_gcode_forward, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        # button_y_minus.clicked.connect(
-        #     partial(self.movement.send_gcode_back, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        # button_x_plus.clicked.connect(
-        #     partial(self.movement.send_gcode_right, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        # button_x_minus.clicked.connect(
-        #     partial(self.movement.send_gcode_left, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        # button_z_plus.clicked.connect(
-        #     partial(self.movement.send_gcode_up, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        # button_z_minus.clicked.connect(
-        #     partial(self.movement.send_gcode_down, self.move_amount_spinbox.value(), self.speed_spinbox.value()))
-        # button_home = QPushButton("Home")
+
 
         button_y_plus.clicked.connect(
             lambda: self.movement.send_gcode_forward(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
@@ -122,5 +112,7 @@ class ManualTab(QWidget):
             lambda: self.movement.send_gcode_up(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
         button_z_minus.clicked.connect(
             lambda: self.movement.send_gcode_down(self.move_amount_spinbox.value(), self.speed_spinbox.value()))
+        # button_home = QPushButton("Home")
+
     def update_gcode_display(self, gcode_command):
         self.gcode_display.append(gcode_command)
