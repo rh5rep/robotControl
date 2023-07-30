@@ -69,7 +69,7 @@ class SchedulerTab(QWidget):
         choose_form.addRow('Insert as Task #: ', self.insert_spinbox)
 
         self.wait_spinbox = QSpinBox()
-        self.wait_spinbox.setRange(1, 60)
+        self.wait_spinbox.setRange(0, 60)
         choose_form.addRow('Wait Time: ', self.wait_spinbox)
 
         self.distance_spinbox = QDoubleSpinBox()
@@ -77,7 +77,7 @@ class SchedulerTab(QWidget):
         choose_form.addRow('Z Travel: ', self.distance_spinbox)
 
         self.feedrate_spinbox = QDoubleSpinBox()
-        self.feedrate_spinbox.setRange(1, 20)
+        self.feedrate_spinbox.setRange(50, 300)
         choose_form.addRow('Feedrate: ', self.feedrate_spinbox)
 
         add_button = QPushButton('Add')
@@ -193,13 +193,15 @@ class SchedulerTab(QWidget):
             if jib == 1:
                 if plug <= len(jib1_plug_dict):
                     self.gcode_commands.append(
-                        f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])}\n' F{self.feedrate_spinbox.value()})
-                    self.gcode_commands.append(
-                        f'G1 Z{self.distance_spinbox.value()}\n')
-                    self.gcode_commands.append(
-                        f'G4 P{self.wait_spinbox.value()*1000}\n')
-                    self.gcode_commands.append(
-                        f'G1 Z-{self.distance_spinbox.value()}\n')
+                        f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])} F{self.feedrate_spinbox.value()}\n' )
+                    # ~ self.gcode_commands.append(
+                        # ~ f'G1 Z{self.distance_spinbox.value()}\n')
+                    # ~ self.gcode_commands.append(
+                        # ~ f'G4 P{self.wait_spinbox.value()*1000}\n')
+                    # ~ self.gcode_commands.append(
+                        # ~ f'G1 Z-{self.distance_spinbox.value()}\n')
+                    # ~ self.gcode_commands.append(
+                        # ~ f'G4 P{self.wait_spinbox.value()*1000}\n')
                 else:
                     print(f"plug {plug} not available")
 
