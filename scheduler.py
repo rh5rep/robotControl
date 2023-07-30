@@ -56,8 +56,6 @@ class SchedulerTab(QWidget):
         tab3_V_layout = QVBoxLayout()
         choose_form = QFormLayout()
 
-        wait_spinbox = QDoubleSpinBox()
-
         choose_form.addRow('Tool:', tool_combo)
 
         choose_form.addRow('Jib #: ', jib_spinbox)
@@ -69,6 +67,14 @@ class SchedulerTab(QWidget):
         self.insert_spinbox = QSpinBox()
         self.insert_spinbox.setRange(1, self.task_form.rowCount())
         choose_form.addRow('Insert as Task #: ', self.insert_spinbox)
+
+        self.wait_spinbox = QSpinBox()
+        self.wait_spinbox.setRange(1, 60)
+        choose_form.addRow('Wait Time: ', self.wait_spinbox)
+
+        self.distance_spinbox = QDoubleSpinBox()
+        self.distance_spinbox.setRange(1, 20)
+        choose_form.addRow('Z Travel: ', self.distance_spinbox)
 
         add_button = QPushButton('Add')
         save_button = QPushButton('Save')
@@ -184,6 +190,12 @@ class SchedulerTab(QWidget):
                 if plug <= len(jib1_plug_dict):
                     self.gcode_commands.append(
                         f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])}\n')
+                    self.gcode_commands.append(
+                        f'G1 Z{self.distance_spinbox.value()}\n')
+                    self.gcode_commands.append(
+                        f'G4 P{self.wait_spinbox.value()*1000}\n')
+                    self.gcode_commands.append(
+                        f'G1 Z-{self.distance_spinbox.value()}\n')
                 else:
                     print(f"plug {plug} not available")
 

@@ -27,6 +27,8 @@ class Movement(QObject):
         if platform.system().startswith('Linux'):
             self.serial = serial.Serial(self.serial_port, self.baud_rate)
 
+        self.send_gcode("M302 S0\nM92 X1600 Y1600 Z1600 E1600\n")
+
 
     def set_movement_type(self, incremental):
         if incremental:
