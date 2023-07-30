@@ -76,6 +76,10 @@ class SchedulerTab(QWidget):
         self.distance_spinbox.setRange(1, 20)
         choose_form.addRow('Z Travel: ', self.distance_spinbox)
 
+        self.feedrate_spinbox = QDoubleSpinBox()
+        self.feedrate_spinbox.setRange(1, 20)
+        choose_form.addRow('Feedrate: ', self.feedrate_spinbox)
+
         add_button = QPushButton('Add')
         save_button = QPushButton('Save')
         load_button = QPushButton('Load')
@@ -189,7 +193,7 @@ class SchedulerTab(QWidget):
             if jib == 1:
                 if plug <= len(jib1_plug_dict):
                     self.gcode_commands.append(
-                        f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])}\n')
+                        f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])}\n' F{self.feedrate_spinbox.value()})
                     self.gcode_commands.append(
                         f'G1 Z{self.distance_spinbox.value()}\n')
                     self.gcode_commands.append(
