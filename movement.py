@@ -1,5 +1,8 @@
+import platform
+
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtWidgets import QTextEdit
+
 import serial
 
 
@@ -17,10 +20,12 @@ class Movement(QObject):
 
         # Serial
 
-        self.serial_port = "/dev/ttyUSB0"
+        # self.serial_port = "/dev/ttyUSB0"
+        # self.serial_port = "COM1"
         self.baud_rate = 115200
 
-        self.serial = serial.Serial(self.serial_port, self.baud_rate)
+        if platform.system().startswith('Linux'):
+            self.serial = serial.Serial(self.serial_port, self.baud_rate)
 
 
     def set_movement_type(self, incremental):
@@ -35,11 +40,13 @@ class Movement(QObject):
         # Append the G-code command to the text box
         self.gcode_display.append(gcode_command)
         # Send the G-code command over the serial connection
-        self.serial.write(gcode_command.encode())
+        if platform.system().startswith('Linux'):
+            self.serial.write(gcode_command.encode())
 
-        if self.serial:
-            # Read and process the serial response
-            self.read_serial_response()
+        if platform.system().startswith('Linux'):
+            if self.serial:
+                # Read and process the serial response
+                self.read_serial_response()
         self.gcode_display_updated.emit(gcode_command)
 
     def get_gcode_display(self):
@@ -79,6 +86,11 @@ class Movement(QObject):
         # gcode_command = "G28 X Y"
         gcode_command = "M302 S0\nM92 X1600 Y1600 Z1600 E1600\n"
         self.send_gcode(gcode_command)
+
+    def from_scheduler(self, commands):
+        for command in commands:
+            self.send_gcode(command)
+
 
     def read_serial_response(self):
         while self.serial.in_waiting:

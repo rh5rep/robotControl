@@ -4,16 +4,21 @@ from functools import partial
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QGridLayout, \
     QPushButton, QLineEdit, QTextEdit, QSpacerItem, QSizePolicy, QRadioButton, QSpinBox, QComboBox, QHBoxLayout, \
-    QFormLayout
+    QFormLayout, QDoubleSpinBox
+
+from movement import Movement
 
 
 class SchedulerTab(QWidget):
     def __init__(self):
         super().__init__()
+        self.gcode_commands = []
         self.index = None
         self.amount_add_pressed = 0
         self.task_data = []
         self.row_data = []
+
+        self.movement = Movement()
 
         # Tab 2
         # vertical
@@ -25,7 +30,7 @@ class SchedulerTab(QWidget):
 
         jib_range = [1, 4]
         jib_array = ['1', '2', '3', '4']
-        tool_array = ['Power Sensor', 'Spectrum Analyzer', 'Cal Standard', 'Inspection', 'None']
+        tool_array = ['Power Sensor', 'Spectrum Analyzer', 'Cal Standard', 'Inspection', 'Plug and Wait', 'None']
         plug_array = []
         for num in range(1, 19):
             plug_array.append(str(num))
@@ -46,54 +51,15 @@ class SchedulerTab(QWidget):
         plug_combo.addItems(plug_array)
         plug_combo.setCurrentText(plug_array[0])
 
-        # tab2_V_layout = QVBoxLayout()
-        # tab2_H1_layout = QHBoxLayout()
-        #
-
-        #
-        # tab2_H1_layout.addWidget(goto_label)
-        # tab2_H1_layout.addWidget(tool_combo)
-        # tab2_H1_layout.addWidget(jib_combo)
-        # tab2_H1_layout.addWidget(plug_combo)
-        #
-        # tab2_V_layout.addLayout(tab2_H1_layout)
-        # tab2_V_layout.addWidget(QPushButton("Go"))
-        #
-        # # Cam Stuff
-        #
-        # cam_array = ['None', 'Cam 1', 'Cam 2']
-        # tab2_H2_layout = QHBoxLayout()
-        # tab2_H2_layout.addWidget(QLabel("View: "))
-        # tab2_H2_layout.addStretch()
-        #
-        # tab2_H2_layout.addStretch()
-        # cam_combo = QComboBox()
-        # cam_combo.addItems(cam_array)
-        # cam_combo.setCurrentText('None')
-        #
-        # view_button = QPushButton('View')
-        #
-        # tab2_H2_layout.addWidget(cam_combo)
-        # tab2_H2_layout.addWidget(view_button)
-        # tab2_V_layout.addLayout(tab2_H2_layout)
-        #
-        # # Tool Stuff
-        #
-        # tab2_H3_layout = QHBoxLayout()
-        # tab2_H3_layout.addWidget(tool_combo)
-        # tab2_H3_layout.addWidget(QPushButton("Change"))
-        #
-        # tab2_V_layout.addLayout(tab2_H3_layout)
-        #
-        # tab2_H2_layout = QHBoxLayout()
-        # tab2_H2_layout.addWidget(QLabel("View"))
 
         # Tab 3
         tab3_V_layout = QVBoxLayout()
-
         choose_form = QFormLayout()
 
+        wait_spinbox = QDoubleSpinBox()
+
         choose_form.addRow('Tool:', tool_combo)
+
         choose_form.addRow('Jib #: ', jib_spinbox)
         choose_form.addRow('Position #: ', plug_spinbox)
 
@@ -107,11 +73,13 @@ class SchedulerTab(QWidget):
         add_button = QPushButton('Add')
         save_button = QPushButton('Save')
         load_button = QPushButton('Load')
+        run_button = QPushButton('Run')
 
         add_button.clicked.connect(
             lambda: self.add_row(tool_combo.currentText(), jib_spinbox.value(), plug_spinbox.value()))
         save_button.clicked.connect(lambda: self.save_tasks())
         load_button.clicked.connect(lambda: self.load_tasks())
+        run_button.clicked.connect(lambda: self.run())
 
         form_H_box.addWidget(save_button)
         form_H_box.addWidget(load_button)
@@ -120,7 +88,7 @@ class SchedulerTab(QWidget):
         tab3_V_layout.addLayout(form_H_box)
         tab3_V_layout.addLayout(choose_form)
         tab3_V_layout.addWidget(add_button)
-        tab3_V_layout.addWidget(QPushButton('Run'))
+        tab3_V_layout.addWidget(run_button)
 
         self.setLayout(tab3_V_layout)
 
@@ -191,3 +159,33 @@ class SchedulerTab(QWidget):
             jib = sublist[1]
             plug = sublist[2]
             self.add_row(tool, jib, plug)
+
+    def run(self):
+        self.update_form()
+        # X Y Z E
+        # Assuming Plug 1 is Home then absolute from there
+        jib1_plug_dict = {
+            1: [0, 0, 0, 0],
+            2: [0, 15, 0, 15],
+            3: [9.5, 17.35, 0, 17.35],
+            4: [9.5, 2.5, 0, 2.5]
+        }
+        jib2_plug_dict = {
+            1: [0, 0, 0, 0]
+        }
+        self.gcode_commands = []
+        for sublist in self.task_data:
+            # print(f'sublist: {sublist}')
+            tool = sublist[0]
+            jib = sublist[1]
+            plug = sublist[2]
+
+            if jib == 1:
+                if plug <= len(jib1_plug_dict):
+                    self.gcode_commands.append(
+                        f'G1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])}')
+                else:
+                    print(f"plug {plug} not available")
+
+                # print(f"g{self.gcode_commands}")
+        self.movement.from_scheduler(self.gcode_commands)

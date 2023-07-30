@@ -3,7 +3,7 @@ from functools import partial
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QGridLayout, \
     QPushButton, QLineEdit, QTextEdit, QSpacerItem, QSizePolicy, QRadioButton, QSpinBox, QComboBox, QHBoxLayout, \
-    QFormLayout
+    QFormLayout, QDoubleSpinBox
 
 from movement import Movement
 
@@ -65,8 +65,8 @@ class ManualTab(QWidget):
         self.absolute_radio.toggled.connect(partial(self.movement.set_movement_type, False))
         tab1_layout.addWidget(self.absolute_radio)
         # Create a spin box for choosing the amount to move
-        self.move_amount_spinbox = QSpinBox()
-        self.move_amount_spinbox.setMinimum(1)
+        self.move_amount_spinbox = QDoubleSpinBox()
+        self.move_amount_spinbox.setMinimum(.1)
         self.move_amount_spinbox.setMaximum(10000)
         tab1_layout.addWidget(self.move_amount_spinbox)
 
