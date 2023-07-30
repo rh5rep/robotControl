@@ -20,7 +20,7 @@ class Movement(QObject):
 
         # Serial
 
-        # self.serial_port = "/dev/ttyUSB0"
+        self.serial_port = "/dev/ttyUSB0"
         # self.serial_port = "COM1"
         self.baud_rate = 115200
 

@@ -183,7 +183,7 @@ class SchedulerTab(QWidget):
             if jib == 1:
                 if plug <= len(jib1_plug_dict):
                     self.gcode_commands.append(
-                        f'G1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])}')
+                        f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])}\n')
                 else:
                     print(f"plug {plug} not available")
 
