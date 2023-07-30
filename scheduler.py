@@ -197,6 +197,8 @@ class SchedulerTab(QWidget):
                         f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])} F{self.feedrate_spinbox.value()}\n' )
                     self.gcode_commands.append(
                         f'G1 Z{self.distance_spinbox.value()}\n')
+                    self.movement.from_scheduler(self.gcode_commands)
+                    self.gcode_commands.clear()
                     time.sleep(self.wait_spinbox.value())
                     self.gcode_commands.append(
                         f'G1 Z-{self.distance_spinbox.value()}\n')
