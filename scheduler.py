@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QTa
     QFormLayout, QDoubleSpinBox
 
 from movement import Movement
+import time
 
 
 class SchedulerTab(QWidget):
@@ -194,14 +195,11 @@ class SchedulerTab(QWidget):
                 if plug <= len(jib1_plug_dict):
                     self.gcode_commands.append(
                         f'G90\nG1 X{str(jib1_plug_dict[plug][0])} Y{str(jib1_plug_dict[plug][1])} Z{str(jib1_plug_dict[plug][2])} E{str(jib1_plug_dict[plug][3])} F{self.feedrate_spinbox.value()}\n' )
-                    # ~ self.gcode_commands.append(
-                        # ~ f'G1 Z{self.distance_spinbox.value()}\n')
-                    # ~ self.gcode_commands.append(
-                        # ~ f'G4 P{self.wait_spinbox.value()*1000}\n')
-                    # ~ self.gcode_commands.append(
-                        # ~ f'G1 Z-{self.distance_spinbox.value()}\n')
-                    # ~ self.gcode_commands.append(
-                        # ~ f'G4 P{self.wait_spinbox.value()*1000}\n')
+                    self.gcode_commands.append(
+                        f'G1 Z{self.distance_spinbox.value()}\n')
+                    time.sleep(self.wait_spinbox.value())
+                    self.gcode_commands.append(
+                        f'G1 Z-{self.distance_spinbox.value()}\n')
                 else:
                     print(f"plug {plug} not available")
 
